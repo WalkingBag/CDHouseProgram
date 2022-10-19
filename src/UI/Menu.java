@@ -39,13 +39,13 @@ public class Menu extends Vector<String> {
         int input = 0;
         System.out.println("\n---------------------------------------");
         System.out.println(title);
-        System.out.println("---------------------------------------");
+        System.out.println("---------------------------------------\n");
         for (int i = 0; i < this.size() - 1; i++) {
-            System.out.println((i + 1) + "- " + this.get(i));
+            System.out.println((i + 1) + ". " + this.get(i));
         }
         System.out.println(this.get(this.size() - 1));
-        System.out.println("---------------------------------------");
-        System.out.print("Choose 1 ... " + (this.size() - 1) + ": ");
+        System.out.println("\n---------------------------------------");
+        System.out.print("[Choose 1 - " + (this.size() - 1) + "]:");
 //        Scanner sc = new Scanner(System.in);
         try {
             input = Integer.parseInt(Tools.sc.nextLine());
@@ -66,7 +66,8 @@ public class Menu extends Vector<String> {
             System.out.println((i + 1) + " - " + list.get(i));
         }
         System.out.println("Others - EXIT!\n");
-        System.out.print("Choose your option [1-2]:");
+        System.out.println("---------------------------------------");
+        System.out.print("[Choose 1 - 2]:");
 //        Scanner sc = new Scanner(System.in);
         try {
             input = Integer.parseInt(Tools.sc.nextLine());

@@ -77,6 +77,7 @@ public class Tools {
         return null;
     }
 
+    //Apperantly I made a mistake and this function shouldn't be here
     public static boolean isItDate(String dateStr, String dateFormat) {
         SimpleDateFormat format = new SimpleDateFormat(dateFormat);
         format.setLenient(false);

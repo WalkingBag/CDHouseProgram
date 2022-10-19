@@ -10,13 +10,13 @@ public class CDProduct implements Serializable, Comparable {
 
     //Serializable is a function that turn an object data into bytestream which translate to machines in 8 bits representation.
     //In other words, turn data types into block of hex data.
-    String collection,title,cdType,publishDate;
+    String collection,title,cdType;
     float unitPrice;
-    int id;
+    int id, publishDate;
     int cdCounting;
     //Count the number of CDs
 
-    public CDProduct(String collection, String cdType, String title,String publishDate, float unitPrice, int id) {
+    public CDProduct(String collection, String cdType, String title,int publishDate, float unitPrice, int id) {
         this.collection = collection;
         this.cdType = cdType;
         this.title = title;
@@ -25,11 +25,11 @@ public class CDProduct implements Serializable, Comparable {
         this.id = id;
     }
 
-    public String getPublishDate() {
+    public int getPublishDate() {
         return publishDate;
     }
 
-    public void setPublishDate(String publishDate) {
+    public void setPublishDate(int publishDate) {
         this.publishDate = publishDate;
     }
     

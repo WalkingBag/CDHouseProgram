@@ -41,7 +41,7 @@ public class CDImplement implements ItemBlueprint {
     @Override
     public void getNewItems() {
         if (numOfItem == 0) {
-            System.out.println("Empty List.");
+            System.out.println("[NOTICE]: The list is empty!");
         } else {
             System.out.print("\n=========================================\n");
             System.out.print("                ITEM LIST\n");
@@ -49,7 +49,7 @@ public class CDImplement implements ItemBlueprint {
             for (int i = 0; i < numOfItem; i++) {
                 System.out.println("[ID]: " + list[i].getId() + "\n"
                         + "[Title]: " + list[i].getTitle() + "\n" + "[Collection]: " + list[i].getCollection().toUpperCase() + "\n"
-                        + "[CD Type]: " + list[i].getCdType().toUpperCase() + "\n" + "[Price]: " + list[i].getUnitPrice() + " $" + "\n" + "[Publishing date]: " + list[i].getPublishDate() + "\n");
+                        + "[CD Type]: " + list[i].getCdType().toUpperCase() + "\n" + "[Price]: " + list[i].getUnitPrice() + " $" + "\n" + "[Publishing Year]: " + list[i].getPublishDate() + "\n");
             }
             System.out.println("=========================================");
         }
@@ -59,7 +59,7 @@ public class CDImplement implements ItemBlueprint {
     public List<CDProduct> getAllItems() {
         items = Tools.loadFromFile(filename, items); //load data
         if (items.isEmpty()) {
-            System.out.println("Empty File.");
+            System.out.println("");
         }
         List<CDProduct> list = new ArrayList<>(); //create new list to store and display
         for (CDProduct item : items) {
@@ -148,7 +148,7 @@ public class CDImplement implements ItemBlueprint {
     public List<CDProduct> getItemByName(String title) {
         items = Tools.loadFromFile(filename, items); //load data to items
         if (items.isEmpty()) {
-            System.out.println("Empty File.");
+            System.out.println("\n[NOTICE]: Empty file!");
         }
         List<CDProduct> list = new ArrayList<>();
         for (CDProduct item : items) {
@@ -169,21 +169,22 @@ public class CDImplement implements ItemBlueprint {
         - Reading price/collection/CDType must have their prerequisite, cannot enter blank
      */
     public void addItem() {
-        int ID;
-        String collection, cdType, title, publishDate;
+        int ID,publishingDate;
+        String collection, cdType, title;
         float price = 0;
         boolean checkCollection = true, checkDate = true;
         if (numOfItem >= MAX) {
-            System.out.println("The list is full already!");
+            System.out.println("\n[NOTICE]: The list is full already!");
+            System.out.println("[HINT]: Try delete/save your unchanges");
             return;
         }
 
         System.out.println("Enter New Item Detail: ");
         do {
-            ID = Integer.parseInt(Tools.readPattern("Insert ID", "[0-9]+"));
+            ID = Integer.parseInt(Tools.readPattern("Insert ID [Number only!]", "[0-9]+"));
             if (checkID(ID) || checkTempID(ID)) {
                 //This will check both memory and file for duplication.
-                System.out.println("Duplicated ID");
+                System.out.println("\n[NOTICE]: Duplicated ID\n");
             } else {
                 checkCollection = false;
             }
@@ -194,7 +195,7 @@ public class CDImplement implements ItemBlueprint {
             title = Tools.readNonBlank("Insert title");
             if (seachItemByName(title) || checkTempTitle(title)) {
                 //This will check both memory and file for duplication.
-                System.out.println("Duplicated title");
+                System.out.println("\n[NOTICE]: Duplicated title\n");
             } else {
                 checkCollection = false;
             }
@@ -225,6 +226,8 @@ public class CDImplement implements ItemBlueprint {
 
         price = Float.parseFloat(Tools.readPattern("Insert price", "[0-9]+"));
 
+        publishingDate = Integer.parseInt(Tools.readPattern("Insert publishing year", "[0-9]+"));
+        /*
         String temp = "";
         do {
             temp = Tools.readPattern("Insert publishing date [dd/MM/yyyy]", "^\\d{2}/\\d{2}/\\d{4}$");
@@ -232,16 +235,18 @@ public class CDImplement implements ItemBlueprint {
         } while (!checkDate || temp.isEmpty());
         Date dateString = Tools.parseDate(temp, "dd/MM/yyyy");
         publishDate = Tools.dataToStr(dateString, "dd/MM/yyyy");
+        */
 
-        list[numOfItem] = new CDProduct(collection, cdType, title, publishDate, price, ID);
+        list[numOfItem] = new CDProduct(collection, cdType, title, publishingDate, price, ID);
         numOfItem++;
         //Keep this number runnin
-        System.out.println("[NOTICE]: New item has been added.");
+        System.out.println("\n[NOTICE]: New item has been added.");
     }
 
     @Override
     public void updateItem(CDProduct item) {
-        String newCollection, newCDType, newTitle, newDate;
+        String newCollection, newCDType, newTitle;
+        int newDate;
         float newPrice;
         boolean checkCollection = true;
         do {
@@ -303,28 +308,39 @@ public class CDImplement implements ItemBlueprint {
                     item.setUnitPrice(newPrice);
                     checkCollection = false;
                 } catch (NumberFormatException e) {
-                    System.out.println("[ERROR]: Wrong format!");
+                    System.out.println("[ERROR]: Wrong Format!");
                     checkCollection = true;
                 }
             }
         } while (checkCollection);
         checkCollection = true;
 
+        String tempStr = "";
         do {
-            System.out.print("Insert new date [dd/MM/yyyy - Blank to skip]:");
-            String tempStr = sc.nextLine();
-            checkCollection = Tools.isItDate(tempStr, "dd/MM/yyyy");
+            System.out.print("Insert new publishing year [yyyy - Blank to skip]:");
+            tempStr = sc.nextLine();
             if (tempStr.isEmpty()) {
                 break;
             } else {
-                Date dateStr = Tools.parseDate(tempStr, "dd/MM/yyyy");
-                newDate = Tools.dataToStr(dateStr, "dd/MM/yyyy");
-                item.setPublishDate(newDate);
+                try {
+                    newDate = Integer.parseInt(tempStr);
+                    item.setPublishDate(newDate);
+                    checkCollection = false;
+                } catch (NumberFormatException e) {
+                    System.out.println("[ERROR]: Wrong Format!");
+                    checkCollection = true;
+                }
             }
-        } while (!checkCollection);
+        } while (checkCollection);
+        /*if (tempStr.isEmpty()) {
+                break;
+            }
+            Date dateStr = Tools.parseDate(tempStr, "dd/MM/yyyy");
+            newDate = Tools.dataToStr(dateStr, "dd/MM/yyyy");
+            item.setPublishDate(newDate);
+        } while (!checkCollection);*/
         checkCollection = true;
-
-        System.out.println("[NOTICE]: " + item.getId() + " is updated!");
+        System.out.println("[NOTICE]: ID " + item.getId() + " is updated!");
     }
 
     public int seachByCode(CDProduct item) {
@@ -345,11 +361,12 @@ public class CDImplement implements ItemBlueprint {
                 list[i] = list[i + 1];
             }
             numOfItem--;
-            System.out.println("The" + list[pos].getId() + "is deleted!");
+            System.out.println("[NOTICE]: The ID " + list[pos].getId() + " is deleted!");
         }
     }
 
     public void deleteAll() {
+        //Reset the list after save.
         for (int i = 0; i < 2; i++) {
             Arrays.fill(list, null);
         }
@@ -362,7 +379,7 @@ public class CDImplement implements ItemBlueprint {
      */
     public void saveFile() {
         Tools.saveToFile(list, numOfItem);
-        System.out.println("New item(s) has been saved to the file.");
+        System.out.println("\n[NOTICE]: New item(s) has been saved to the file.");
         numOfItem = 0;
         deleteAll();
     }

@@ -16,16 +16,16 @@ import ui.Menu;
 public class CDHouseProgram {
 
     public static void main(String[] args) {
-        String[] options = {"Add item to the catalog",
-            "Search item by item name",
+        String[] options = {"Add CD to the catalog",
+            "Search CD by CD name",
             "Display the catalog",
-            "Update item",
+            "Update CD",
             "Save the catalog to file",
-            "Print list items from file",
-            "Others- Quit"
+            "Print list CDs from file",
+            "Others - Quit"
         };
         Menu mnu = new Menu(options);
-        int choice = 0, inputID;
+        int choice = 0, inputID = 0;
         String response, input;
         CDProduct item;
         boolean changed = false;
@@ -33,7 +33,7 @@ public class CDHouseProgram {
         do {
             int choice2;
             boolean quit = false;
-            choice = mnu.getChoice("ITEM MANAGER");
+            choice = mnu.getChoice("              CDs MANAGER");
             System.out.println("---------------------------------------");
             switch (choice) {
                 case 1:
@@ -48,15 +48,15 @@ public class CDHouseProgram {
                     List<CDProduct> list = new ArrayList<>();
                     list = imp.getItemByName(input);
                     if (list.isEmpty()) {
-                        System.out.println("No Item Found!");
+                        System.out.println("[NOTICE]: Invalid CDs");
                     } else {
                         System.out.print("\n=========================================\n");
-                        System.out.print("                ITEM LIST\n");
+                        System.out.print("                 CD LIST\n");
                         System.out.println("=========================================\n");
                         for (CDProduct items : list) {
                             System.out.println("[ID]: " + items.getId() + "\n"
                                     + "[Title]: " + items.getTitle() + "\n" + "[Collection]: " + items.getCollection().toUpperCase() + "\n"
-                                    + "[CD Type]: " + items.getCdType().toUpperCase() + "\n" + "[Price]: " + items.getUnitPrice() + " $" + "\n" + "[Publishing date]: " + items.getPublishDate() + "\n");
+                                    + "[CD Type]: " + items.getCdType().toUpperCase() + "\n" + "[Price]: " + items.getUnitPrice() + " $" + "\n" + "[Publishing Year]: " + items.getPublishDate() + "\n");
                         }
                         System.out.println("=========================================");
                     }
@@ -67,12 +67,24 @@ public class CDHouseProgram {
                 case 4:
                     do {
                         mnu.list.clear();
-                        mnu.list.add("Update a item");
-                        mnu.list.add("Delete a item");
-                        choice2 = mnu.getChoice2("Update items");
+                        mnu.list.add("Update a CD");
+                        mnu.list.add("Delete a CD");
+                        choice2 = mnu.getChoice2("              UPDATE CDs!");
+                        String tempString = "";
+                        boolean flag = true;
                         switch (choice2) {
                             case 1:
-                                inputID = Integer.parseInt(Tools.readNonBlank("Enter ID of the CD"));
+                                do {
+                                    System.out.print("Enter ID of the CD:");
+                                    tempString = Tools.sc.nextLine();
+                                    try {
+                                        inputID = Integer.parseInt(tempString);
+                                        flag = false;
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("\n[ERROR]: Wrong Format!\n");
+                                        flag = true;
+                                    }
+                                } while (flag);
                                 item = imp.searchItemByID(inputID);
                                 if (item != null) {
                                     imp.updateItem(item);
@@ -87,7 +99,17 @@ public class CDHouseProgram {
                                 changed = true;
                                 break;
                             case 2:
-                                inputID = Integer.parseInt(Tools.readNonBlank("Enter ID of the CD"));
+                                do {
+                                    System.out.print("Enter ID of the CD:");
+                                    tempString = Tools.sc.nextLine();
+                                    try {
+                                        inputID = Integer.parseInt(tempString);
+                                        flag = false;
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("\n[ERROR]: Wrong Format!\n");
+                                        flag = true;
+                                    }
+                                } while (flag);
                                 item = imp.searchItemByID(inputID);
                                 if (item != null) {
                                     imp.deleteItem(item);
@@ -113,14 +135,14 @@ public class CDHouseProgram {
                     break;
                 case 6:
                     System.out.print("\n=========================================\n");
-                    System.out.print("                ITEM LIST\n");
+                    System.out.print("                 CD LIST\n");
                     System.out.println("=========================================\n");
                     for (CDProduct items : imp.getAllItems()) {
                         //imp.getAllItems return list.
                         if (items != null) {
                             System.out.println("[ID]: " + items.getId() + "\n"
                                     + "[Title]: " + items.getTitle() + "\n" + "[Collection]: " + items.getCollection().toUpperCase() + "\n"
-                                    + "[CD Type]: " + items.getCdType().toUpperCase() + "\n" + "[Price]: " + items.getUnitPrice() + " $" + "\n" + "[Publishing date]: " + items.getPublishDate() + "\n");
+                                    + "[CD Type]: " + items.getCdType().toUpperCase() + "\n" + "[Price]: " + items.getUnitPrice() + " $" + "\n" + "[Publishing Year]: " + items.getPublishDate() + "\n");
                         }
                     }
                     System.out.println("=========================================");
@@ -129,7 +151,7 @@ public class CDHouseProgram {
                     //This needed to be changed when the user alr made saves, so it doesn't have to ask.
                     //Approach: Needs to manually turn false when saved.
                     if (changed) {
-                        System.out.print("There's unsaved changes [Y/N]: ");
+                        System.out.print("There's unsaved changes, save? [Y/N]: ");
                         response = Tools.sc.nextLine().toUpperCase();
                         if (response.startsWith("Y")) {
                             imp.saveFile();
