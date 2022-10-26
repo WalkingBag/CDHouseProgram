@@ -77,6 +77,9 @@ public class CDHouseProgram {
                                 do {
                                     System.out.print("Enter ID of the CD:");
                                     tempString = Tools.sc.nextLine();
+                                    if (tempString.isEmpty()) {
+                                        break;
+                                    }
                                     try {
                                         inputID = Integer.parseInt(tempString);
                                         flag = false;
@@ -102,6 +105,9 @@ public class CDHouseProgram {
                                 do {
                                     System.out.print("Enter ID of the CD:");
                                     tempString = Tools.sc.nextLine();
+                                    if (tempString.isEmpty()) {
+                                        break;
+                                    }
                                     try {
                                         inputID = Integer.parseInt(tempString);
                                         flag = false;
